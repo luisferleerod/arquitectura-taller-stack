@@ -1,16 +1,11 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import viewsets
+# iot/views.py
+from django.http import JsonResponse
 from .models import Dispositivo, Lectura
-from .serializers import DispositivoSerializer, LecturaSerializer
 
-# ViewSet para manejar dispositivos
-class DispositivoViewSet(viewsets.ModelViewSet):
-    queryset = Dispositivo.objects.all()
-    serializer_class = DispositivoSerializer
+def lista_dispositivos(request):
+    dispositivos = Dispositivo.objects.all().values('id', 'nombre', 'tipo', 'ubicacion', 'estado')
+    return JsonResponse(list(dispositivos), safe=False)
 
-# ViewSet para manejar lecturas
-class LecturaViewSet(viewsets.ModelViewSet):
-    queryset = Lectura.objects.all()
-    serializer_class = LecturaSerializer
+def lista_lecturas(request):
+    lecturas = Lectura.objects.all().values('id', 'dispositivo__nombre', 'valor', 'timestamp')
+    return JsonResponse(list(lecturas), safe=False)

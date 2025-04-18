@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend  # Ruta a la carpeta del backend
+    container_name: backend
+    ports:
+      - "8000:8000"  # Exponer el puerto 8000
+    volumes:
+      - ./backend:/app  # Montar el directorio local del backend al contenedor

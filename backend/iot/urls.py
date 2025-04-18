@@ -1,13 +1,8 @@
 # iot/urls.py
-
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import DispositivoViewSet, LecturaViewSet
-
-router = DefaultRouter()
-router.register(r'dispositivos', DispositivoViewSet)
-router.register(r'lecturas', LecturaViewSet)
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('api/', include(router.urls)),  # Exponer las rutas de la API
+    path('dispositivos/', views.lista_dispositivos, name='lista_dispositivos'),
+    path('lecturas/', views.lista_lecturas, name='lista_lecturas'),
 ]
