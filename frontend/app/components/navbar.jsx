@@ -6,6 +6,7 @@ export default function Navbar() {
     <nav style={{ padding: '1rem', backgroundColor: '#0070f3', color: 'white' }}>
       <Link href="/">Inicio</Link> |{' '}
       <Link href="/dispositivos">Dispositivos</Link> |{' '}
+      <Link href="/lecturas">Lecturas</Link> |{' '}
 
     </nav>
   );
