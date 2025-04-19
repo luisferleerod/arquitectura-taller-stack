@@ -79,10 +79,22 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_cassandra_engine.models',
+        'NAME': 'arquitectura',  # Nombre del keyspace en Cassandra
+        'HOST': 'host.docker.internal',  # Host de Cassandra
+        'PORT': 9042,  # Puerto en que Cassandra escucha
+        'USER': 'cassandra',  # Usuario de Cassandra (si aplica)
+        'PASSWORD': '',  # Contraseña (si aplica)
+        'OPTIONS': {
+            'replication': {
+                'class': 'SimpleStrategy',  # Estrategia de replicación
+                'replication_factor': 3,    # Factor de replicación
+            }
+        }
     }
 }
+
+
 
 
 # Password validation
