@@ -1,0 +1,37 @@
+1745101121: mosquitto version 2.0.21 starting
+1745101121: Config loaded from /mosquitto/config/mosquitto.conf.
+1745101121: Opening ipv4 listen socket on port 1883.
+1745101121: Opening ipv6 listen socket on port 1883.
+1745101121: Opening websockets listen socket on port 9001.
+1745101121: mosquitto version 2.0.21 running
+1745101220: mosquitto version 2.0.21 terminating
+1745101220: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1745101276: mosquitto version 2.0.21 starting
+1745101276: Config loaded from /mosquitto/config/mosquitto.conf.
+1745101276: Opening ipv4 listen socket on port 1883.
+1745101276: Opening ipv6 listen socket on port 1883.
+1745101276: Opening websockets listen socket on port 9001.
+1745101276: mosquitto version 2.0.21 running
+1745101277: New connection from 172.18.0.4:47705 on port 1883.
+1745101277: New client connected from 172.18.0.4:47705 as auto-97B6793F-A2EE-EFC4-72E1-F907783408D9 (p2, c1, k60).
+1745101277: New connection from 172.18.0.5:52761 on port 1883.
+1745101277: New client connected from 172.18.0.5:52761 as auto-0646E35C-E16F-FF9F-9B6C-72066DFC9172 (p2, c1, k60).
+1745101278: New connection from 172.18.0.7:41809 on port 1883.
+1745101278: New client connected from 172.18.0.7:41809 as auto-C0760390-53C3-17AB-5946-1E3D9020372F (p2, c1, k60).
+1745101321: Client auto-0646E35C-E16F-FF9F-9B6C-72066DFC9172 closed its connection.
+1745101321: Client auto-97B6793F-A2EE-EFC4-72E1-F907783408D9 closed its connection.
+1745101321: Client auto-C0760390-53C3-17AB-5946-1E3D9020372F closed its connection.
+1745101323: mosquitto version 2.0.21 terminating
+1745101323: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1745101337: mosquitto version 2.0.21 starting
+1745101337: Config loaded from /mosquitto/config/mosquitto.conf.
+1745101337: Opening ipv4 listen socket on port 1883.
+1745101337: Opening ipv6 listen socket on port 1883.
+1745101337: Opening websockets listen socket on port 9001.
+1745101337: mosquitto version 2.0.21 running
+1745101338: New connection from 172.18.0.4:52835 on port 1883.
+1745101338: New client connected from 172.18.0.4:52835 as auto-DAE22038-BF53-0B38-9D9F-C103489CE3A3 (p2, c1, k60).
+1745101338: New connection from 172.18.0.5:45877 on port 1883.
+1745101338: New client connected from 172.18.0.5:45877 as auto-DB56F53A-D0C4-C31B-71B4-8629A38F9779 (p2, c1, k60).
+1745101338: New connection from 172.18.0.6:39325 on port 1883.
+1745101338: New client connected from 172.18.0.6:39325 as auto-22EF6B29-7491-5169-CD14-2D07D2AF5D09 (p2, c1, k60).

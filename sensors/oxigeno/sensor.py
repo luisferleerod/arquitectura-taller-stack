@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 import json
 
 # Configuración del broker MQTT
-MQTT_BROKER = "mqtt-broker"  # Nombre del servicio en Docker Compose
+MQTT_BROKER = "mqtt"  # Nombre del servicio en Docker Compose
 MQTT_PORT = 1883
 MQTT_TOPIC = "sensors/oxygen"  # Topic donde los datos de oxígeno serán publicados
 

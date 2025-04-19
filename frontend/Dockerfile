@@ -1,20 +1,20 @@
-# Usamos una imagen oficial de Node.js como base
-FROM node:16
+# Usando una imagen base de Node.js
+FROM node:20-alpine
 
-# Establecemos el directorio de trabajo dentro del contenedor
+# Establece el directorio de trabajo en /app
 WORKDIR /app
 
-# Copiamos los archivos package.json y package-lock.json para instalar las dependencias
+# Copia package.json y package-lock.json (o yarn.lock)
 COPY package*.json ./
 
-# Instalamos las dependencias
-RUN npm install
+# Instala las dependencias forzando la resolución de dependencias
+RUN npm install --legacy-peer-deps
 
-# Copiamos todo el contenido de la aplicación al contenedor
+# Copia el resto del código fuente
 COPY . .
-
-# Exponemos el puerto en el que Next.js se ejecutará (default es 3000)
+RUN npm run build
+# Expone el puerto
 EXPOSE 3000
 
-# Comando para iniciar la aplicación en producción
-CMD ["npm", "run", "dev"]
+# Ejecuta la aplicación Next.js
+CMD ["npm", "run", "start"]

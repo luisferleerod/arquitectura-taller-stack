@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,15 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_cassandra_engine',
+    'corsheaders',
+    'rest_framework',
+    'iot',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'iot',
-    'rest_framework',  # lo vamos a instalar en el paso siguiente
-    'corsheaders',      # también lo vamos a instalar
+    'django.contrib.staticfiles'
 
 ]
 
@@ -79,17 +80,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_cassandra_engine.models',
-        'NAME': 'arquitectura',  # Nombre del keyspace en Cassandra
-        'HOST': 'host.docker.internal',  # Host de Cassandra
-        'PORT': 9042,  # Puerto en que Cassandra escucha
-        'USER': 'cassandra',  # Usuario de Cassandra (si aplica)
-        'PASSWORD': '',  # Contraseña (si aplica)
+        'ENGINE': 'django_cassandra_engine',
+        'NAME': os.environ.get('CASSANDRA_KEYSPACE', 'arquitectura'),
+        'HOST': os.environ.get('CASSANDRA_HOST', 'cassandra'),
+        'PORT': int(os.environ.get('CASSANDRA_PORT', 9042)),
         'OPTIONS': {
             'replication': {
-                'class': 'SimpleStrategy',  # Estrategia de replicación
-                'replication_factor': 3,    # Factor de replicación
-            }
+                'strategy_class': 'SimpleStrategy',
+                'replication_factor': 3,
+            },
+            # Si quieres, añade opciones de conexión aquí
         }
     }
 }

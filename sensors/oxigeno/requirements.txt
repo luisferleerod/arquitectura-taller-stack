@@ -1,0 +1,4 @@
+flask
+requests
+paho-mqtt
+# y cualquier otra dependencia que necesites
