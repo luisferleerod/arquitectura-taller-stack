@@ -1,3 +1,6 @@
+-- Eliminar el keyspace si ya existe (esto borra todas las tablas y datos)
+DROP KEYSPACE IF EXISTS sensores_app;
+
 -- Crear keyspace para la aplicación
 CREATE KEYSPACE IF NOT EXISTS sensores_app 
 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
@@ -26,11 +29,12 @@ CREATE TABLE IF NOT EXISTS lecturas (
 CREATE INDEX IF NOT EXISTS ON lecturas (timestamp);
 
 -- Insertar algunos dispositivos de ejemplo
-INSERT INTO dispositivos (id, nombre, tipo, ubicacion, estado) 
-VALUES (uuid(), 'Sensor Temperatura 1', 'sensor', 'Sala principal', 'activo');
+INSERT INTO dispositivos (id, nombre, tipo, estado) 
+VALUES (uuid(), 'Sensor Temperatura 1', 'Temperatura', 'activo');
 
-INSERT INTO dispositivos (id, nombre, tipo, ubicacion, estado) 
-VALUES (uuid(), 'Sensor Humedad 1', 'sensor', 'Exterior', 'activo');
+INSERT INTO dispositivos (id, nombre, tipo, estado) 
+VALUES (uuid(), 'Sensor Humedad 1', 'Humedad', 'activo');
 
-INSERT INTO dispositivos (id, nombre, tipo, ubicacion, estado) 
-VALUES (uuid(), 'Sensor Oxigeno 1', 'sensor', 'Laboratorio', 'activo');
+INSERT INTO dispositivos (id, nombre, tipo, estado) 
+VALUES (uuid(), 'Sensor Oxigeno 1', 'Oxigeno', 'activo');
+
