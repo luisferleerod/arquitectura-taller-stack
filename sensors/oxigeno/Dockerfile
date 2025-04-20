@@ -17,4 +17,4 @@ COPY . /app/
 EXPOSE 4000
 
 # Comando para iniciar el servicio de sensores
-CMD ["python", "sensor.py"]
+CMD ["python", "-u", "sensor.py"]

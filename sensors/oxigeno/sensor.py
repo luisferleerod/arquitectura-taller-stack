@@ -1,43 +1,28 @@
 import time
 import random
-import paho.mqtt.client as mqtt
 import json
+import paho.mqtt.client as mqtt
 
-# Configuración del broker MQTT
-MQTT_BROKER = "mqtt"  # Nombre del servicio en Docker Compose
-MQTT_PORT = 1883
-MQTT_TOPIC = "sensors/oxygen"  # Topic donde los datos de oxígeno serán publicados
+# ahora le pedimos explícitamente la v2 del API de callbacks
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 
-# Generar un valor de oxígeno simulado
-def generate_oxygen():
-    return round(random.uniform(18.0, 21.0), 2)  # Oxígeno en el rango de la atmósfera terrestre
-
-# Función para conectar al broker MQTT
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
 
+client.on_connect = on_connect
+
 def setup_mqtt():
-    client = mqtt.Client()
-    client.on_connect = on_connect
-    client.connect(MQTT_BROKER, MQTT_PORT, 60)
+    client.connect("mqtt", 1883, 60)
     return client
 
-# Función principal
 def main():
     client = setup_mqtt()
-
     while True:
-        oxygen = generate_oxygen()
-        data_message = {
-            "oxygen": oxygen
-        }
-
-        # Publicar los datos en el topic MQTT
-        client.publish(MQTT_TOPIC, json.dumps(data_message))
-
-        print(f"Published data: {data_message}")
-
-        time.sleep(5)  # Esperar 5 segundos antes de enviar más datos
+        oxygen = round(random.uniform(18.0, 21.0), 2)
+        msg = json.dumps({"oxygen": oxygen})
+        client.publish("sensors/oxygen", msg)
+        print(f"Published data: {msg}")
+        time.sleep(5)
 
 if __name__ == "__main__":
     main()
