@@ -1,11 +1,17 @@
-import Navbar from './components/navbar';  // Verifica la ruta del componente
+// app/layout.jsx
+
+import './globals.css';
+
+export const metadata = {
+  title: 'Sensor Dashboard',
+  description: 'Proyecto de sensores con MQTT y Cassandra',
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body>
-        <Navbar />  {/* Esto debe funcionar si Navbar está exportado correctamente */}
-        <main>{children}</main>
+        {children}
       </body>
     </html>
   );
