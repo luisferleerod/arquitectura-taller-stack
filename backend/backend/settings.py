@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django_cassandra_engine',
-        'NAME': os.environ.get('CASSANDRA_KEYSPACE', 'arquitectura'),
+        'NAME': os.environ.get('CASSANDRA_KEYSPACE', 'sensores_app'),
         'HOST': os.environ.get('CASSANDRA_HOST', 'cassandra'),
         'PORT': int(os.environ.get('CASSANDRA_PORT', 9042)),
         'OPTIONS': {

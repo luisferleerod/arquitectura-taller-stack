@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import Dispositivo, Lectura
 
 def lista_dispositivos(request):
-    dispositivos = Dispositivo.objects.all().values('id', 'nombre', 'tipo', 'ubicacion', 'estado')
+    dispositivos = Dispositivo.objects.all().values('id', 'nombre', 'tipo', 'estado')
     return JsonResponse(list(dispositivos), safe=False)
 
 def lista_lecturas(request):
