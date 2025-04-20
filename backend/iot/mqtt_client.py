@@ -4,19 +4,21 @@ import django
 import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
-from iot.models import Lectura  # Asegúrate de que el modelo Lectura está importado correctamente
 
-# Asegúrate de que el directorio principal de tu proyecto esté en el sys.path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # /app
+sys.path.append(BASE_DIR)
 
 # Configura correctamente DJANGO_SETTINGS_MODULE
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")  # Apunta a backend.settings.py
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 
 # Inicializa Django
 django.setup()
 
+# Importa el modelo
+from iot.models import Lectura
+
 # Configuración del broker MQTT
-MQTT_BROKER = "mqtt-broker"  # Nombre del servicio en Docker Compose
+MQTT_BROKER = "mqtt"  # Nombre del servicio en Docker Compose
 MQTT_PORT = 1883
 MQTT_TOPICS = [
     "sensors/humidity",  # Topic de humedad
@@ -26,8 +28,11 @@ MQTT_TOPICS = [
 
 # Función que se ejecuta cuando se recibe un mensaje
 def on_message(client, userdata, msg):
+    print(f"Mensaje recibido en el topic {msg.topic}: {msg.payload}")
     try:
         payload = json.loads(msg.payload.decode())
+        print(f"Payload decodificado: {payload}")
+
         if msg.topic == "sensors/humidity":
             sensor_type = 'humedad'
             value = payload.get("humidity")
@@ -42,10 +47,12 @@ def on_message(client, userdata, msg):
             return
         
         if value is not None:
-            # Guardamos la lectura en Cassandra
             lectura = Lectura(tipo=sensor_type, valor=value, timestamp=datetime.now())
             lectura.save()
             print(f"Saved new {sensor_type} reading: {value}")
+        else:
+            print("Valor no encontrado en el payload")
+
     except Exception as e:
         print(f"Error processing message: {e}")
 
