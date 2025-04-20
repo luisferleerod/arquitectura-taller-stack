@@ -1,8 +1,6 @@
-# iot/urls.py
 from django.urls import path
-from . import views
+from .views import lista_dispositivos
 
 urlpatterns = [
-    path('dispositivos/', views.lista_dispositivos, name='lista_dispositivos'),
-    path('lecturas/', views.lista_lecturas, name='lista_lecturas'),
+    path('lista-dispositivos/', lista_dispositivos),
 ]
