@@ -2,6 +2,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Dispositivo, Lectura
+import json
 
 def lista_dispositivos(request):
     dispositivos = Dispositivo.objects.all().values('id', 'nombre', 'tipo', 'estado')
@@ -39,3 +40,26 @@ def eliminar_dispositivo(request, dispositivo_id):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+@csrf_exempt
+def actualizar_dispositivo(request, id):
+    if request.method == 'PUT':
+        session = get_session()
+        data = json.loads(request.body)
+
+        nombre = data.get('nombre')
+        tipo = data.get('tipo')
+        estado = data.get('estado')
+
+        session.execute(
+            """
+            UPDATE iot_dispositivo
+            SET nombre = %s, tipo = %s, estado = %s
+            WHERE id = %s
+            """,
+            (nombre, tipo, estado, id)
+        )
+
+        return JsonResponse({'mensaje': 'Dispositivo actualizado correctamente'})
+    
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
