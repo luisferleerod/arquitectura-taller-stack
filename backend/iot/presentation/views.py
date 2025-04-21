@@ -1,7 +1,7 @@
 # iot/views.py
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .models import Dispositivo, Lectura
+from iot.domain.models import Dispositivo, Lectura
 import json
 from django.views.decorators.http import require_http_methods
 from uuid import uuid4
@@ -15,7 +15,7 @@ def lista_lecturas(request):
     return JsonResponse(list(lecturas), safe=False)
 
 from django.http import JsonResponse
-from .cassandra_connector import get_session 
+from iot.infrastructure.cassandra_connector import get_session
 def lista_dispositivos(request):
     session = get_session()
     rows = session.execute("SELECT id, nombre, tipo, estado FROM iot_dispositivo")
@@ -94,7 +94,7 @@ def actualizar_dispositivo(request, id):
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 from django.http import JsonResponse
-from .cassandra_connector import get_session
+from iot.infrastructure.cassandra_connector import get_session
 from datetime import datetime
 
 def lista_lecturas(request):

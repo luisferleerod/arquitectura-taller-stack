@@ -23,6 +23,6 @@ docker-compose up -d --build
 
 - Finalmente despues de unos segundos en el buscador coloque http://localhost:3000/ y espere a que le salgan los tres contenedores iniciales
 - (En caso de ir al apartado de lecturas y no ver mediciones aun ya habiendo visto los sensores en la web, ejecute este comando:
-docker exec -it django_backend python iot/mqtt_client.py)
+docker exec -it django_backend python iot/infrastructure/mqtt_client.py)
 
 - Con eso ya puede hacer crud de sensores, y ver los valores que sacan los sensores

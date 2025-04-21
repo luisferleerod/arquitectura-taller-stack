@@ -6,14 +6,14 @@ import json
 from datetime import datetime
 from uuid import uuid4
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(BASE_DIR)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 django.setup()
 
-from iot.models import Lectura
-from iot.cassandra_connector import get_session
+from iot.domain.models import Lectura
+from iot.infrastructure.cassandra_connector import get_session
 
 MQTT_BROKER = "mqtt"
 MQTT_PORT = 1883
@@ -25,7 +25,7 @@ MQTT_TOPICS = [
 
 def get_dispositivo_id(sensor_type):
     session = get_session()
-    query = "SELECT id FROM iot_dispositivo WHERE tipo = %s LIMIT 1"
+    query = "SELECT id FROM iot_dispositivo WHERE tipo = %s LIMIT 1 ALLOW FILTERING"
     row = session.execute(query, [sensor_type]).one()
     return row.id if row else None
 
