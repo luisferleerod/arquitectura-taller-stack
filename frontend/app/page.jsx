@@ -1,4 +1,4 @@
-"use client"; // Necesario para usar hooks en Next.js
+'use client';
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -11,8 +11,8 @@ export default function HomePage() {
     tipo: "",
     estado: "activo",
   });
+  const [sensorEditar, setSensorEditar] = useState(null); // estado para edición
 
-  // Función para obtener sensores desde el backend
   const obtenerSensores = async () => {
     try {
       const response = await fetch("http://localhost:8000/lista-dispositivos/");
@@ -26,10 +26,37 @@ export default function HomePage() {
     }
   };
 
-  // Llamar a la API cuando el componente se monte
   useEffect(() => {
-    obtenerSensores(); // Llamada a la API cuando el componente se monta
+    obtenerSensores();
   }, []);
+
+  // 🧩 Aquí van tus funciones de edición
+  const editarSensor = (sensor) => {
+    setSensorEditar(sensor); // carga los datos en el formulario
+  };
+
+  const actualizarSensor = async (e) => {
+    e.preventDefault();
+    const { id, nombre, tipo, estado } = sensorEditar;
+
+    try {
+      const res = await fetch(`http://localhost:8000/actualizar-dispositivo/${id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nombre, tipo, estado })
+      });
+
+      if (!res.ok) throw new Error('Error actualizando sensor');
+
+      setSensores(sensores.map(s => (s.id === id ? sensorEditar : s)));
+      setSensorEditar(null);
+    } catch (err) {
+      console.error(err);
+      alert('Error al actualizar');
+    }
+  };
 
   const eliminarSensor = async (id) => {
     const confirm = window.confirm("¿Seguro que deseas eliminar este sensor?");
@@ -122,9 +149,7 @@ export default function HomePage() {
           <li key={sensor.id}>
             <strong>{sensor.nombre}</strong> ({sensor.tipo}) - {sensor.estado}
             <div>
-              <button onClick={() => alert(`Editar ${sensor.nombre}`)}>
-                Editar
-              </button>
+              <button onClick={() => editarSensor(sensor)}>Editar</button>
               <button onClick={() => eliminarSensor(sensor.id)}>
                 Eliminar
               </button>
@@ -132,6 +157,37 @@ export default function HomePage() {
           </li>
         ))}
       </ul>
+
+      {/* Formulario de edición */}
+      {sensorEditar && (
+        <form onSubmit={actualizarSensor}>
+          <h3>Editar Sensor</h3>
+          <input
+            value={sensorEditar.nombre}
+            onChange={(e) => setSensorEditar({ ...sensorEditar, nombre: e.target.value })}
+            placeholder="Nombre"
+          />
+          <select
+            value={sensorEditar.tipo}
+            onChange={(e) => setSensorEditar({ ...sensorEditar, tipo: e.target.value })}
+          >
+            <option value="Temperatura">Temperatura</option>
+            <option value="Humedad">Humedad</option>
+            <option value="Oxigeno">Oxígeno</option>
+          </select>
+
+          <select
+            value={sensorEditar.estado}
+            onChange={(e) => setSensorEditar({ ...sensorEditar, estado: e.target.value })}
+          >
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+
+          <button type="submit">Actualizar</button>
+          <button type="button" onClick={() => setSensorEditar(null)}>Cancelar</button>
+        </form>
+      )}
     </main>
   );
 }

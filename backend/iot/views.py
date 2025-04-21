@@ -2,8 +2,8 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Dispositivo, Lectura
-from django.views.decorators.http import require_http_methods
 import json
+from django.views.decorators.http import require_http_methods
 from uuid import uuid4
 
 def lista_dispositivos(request):
@@ -68,3 +68,27 @@ def agregar_dispositivo(request):
     except Exception as e:
         print("ERROR:", str(e))  
         return JsonResponse({'error': str(e)}, status=500)
+
+    
+@csrf_exempt
+def actualizar_dispositivo(request, id):
+    if request.method == 'PUT':
+        session = get_session()
+        data = json.loads(request.body)
+
+        nombre = data.get('nombre')
+        tipo = data.get('tipo')
+        estado = data.get('estado')
+
+        session.execute(
+            """
+            UPDATE iot_dispositivo
+            SET nombre = %s, tipo = %s, estado = %s
+            WHERE id = %s
+            """,
+            (nombre, tipo, estado, id)
+        )
+
+        return JsonResponse({'mensaje': 'Dispositivo actualizado correctamente'})
+    
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
