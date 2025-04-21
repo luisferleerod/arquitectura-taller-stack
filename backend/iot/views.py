@@ -1,4 +1,5 @@
 # iot/views.py
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Dispositivo, Lectura
 
@@ -25,3 +26,16 @@ def lista_dispositivos(request):
         } for row in rows
     ]
     return JsonResponse(dispositivos, safe=False)
+
+@csrf_exempt
+def eliminar_dispositivo(request, dispositivo_id):
+    if request.method == 'DELETE':
+        session = get_session()
+        query = f"DELETE FROM iot_dispositivo WHERE id = {dispositivo_id}"
+        try:
+            session.execute(query)
+            return JsonResponse({'mensaje': 'Dispositivo eliminado correctamente'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)

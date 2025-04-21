@@ -25,12 +25,24 @@ export default function HomePage() {
     obtenerSensores();  // Llamada a la API cuando el componente se monta
   }, []);
 
-  const eliminarSensor = (id) => {
+  const eliminarSensor = async (id) => {
     const confirm = window.confirm('¿Seguro que deseas eliminar este sensor?');
-    if (confirm) {
+    if (!confirm) return;
+  
+    try {
+      const res = await fetch(`http://localhost:8000/eliminar-dispositivo/${id}/`, {
+        method: 'DELETE'
+      });
+  
+      if (!res.ok) throw new Error('Error al eliminar el sensor');
+  
       setSensores(sensores.filter((s) => s.id !== id));
+    } catch (error) {
+      console.error('Error eliminando:', error);
+      alert('Hubo un error al eliminar el sensor');
     }
   };
+  
 
   return (
     <main>
@@ -47,7 +59,7 @@ export default function HomePage() {
               <button onClick={() => alert(`Ver ${sensor.nombre}`)}>Ver</button>
               <button onClick={() => alert(`Editar ${sensor.nombre}`)}>Editar</button>
               <button onClick={() => eliminarSensor(sensor.id)}>Eliminar</button>
-            </div>
+              </div>
           </li>
         ))}
       </ul>
