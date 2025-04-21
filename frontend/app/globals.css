@@ -1,45 +1,73 @@
-@import "tailwindcss";
-
-/* app/globals.css */
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background-color: #f7f7f7;
+/* Definición de variables para facilitar la personalización */
+:root {
+  --primary-color: #1e90ff;
+  --secondary-color: #0d6efd;
+  --danger-color: #dc3545;
+  --background-color: #f7f7f7;
+  --card-background: white;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --text-color: #333;
+  --border-color: #ddd;
+  --hover-color: #0d6efd;
+  --hover-danger-color: #c82333;
+  --font-family: Arial, sans-serif;
+  --border-radius: 12px;
+  --padding: 20px;
+  --button-radius: 4px;
 }
 
+@import "tailwindcss"; /* Asegúrate de que tailwind esté configurado correctamente */
+
+/* Estilos generales */
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  padding: var(--padding);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Estilo principal de la página */
 main {
   max-width: 800px;
   margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--card-background);
+  padding: var(--padding);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px var(--card-shadow);
 }
 
+/* Títulos */
 h1 {
   text-align: center;
-  color: #333;
+  color: var(--text-color);
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
+/* Barra de navegación */
 nav {
-  background: #1e90ff;
-  padding: 10px 20px;
+  background: var(--primary-color);
+  padding: 12px 20px;
   text-align: center;
+  border-radius: 8px;
 }
 
 nav a {
   color: white;
-  margin: 0 10px;
+  margin: 0 15px;
   text-decoration: none;
   font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 nav a:hover {
   text-decoration: underline;
+  color: var(--secondary-color);
 }
 
+/* Estilo de listas */
 ul {
   list-style-type: none;
   padding: 0;
@@ -47,34 +75,74 @@ ul {
 
 li {
   background: #fafafa;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   padding: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   border-radius: 8px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+li:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 li div {
   margin-top: 10px;
 }
 
+/* Estilos de los botones */
 button {
   margin-right: 8px;
-  padding: 5px 10px;
-  background-color: #1e90ff;
+  padding: 8px 16px;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--button-radius);
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  display: inline-block;
 }
 
 button:hover {
-  background-color: #0d6efd;
+  background-color: var(--hover-color);
 }
 
 button:last-child {
-  background-color: #dc3545;
+  background-color: var(--danger-color);
 }
 
 button:last-child:hover {
-  background-color: #c82333;
+  background-color: var(--hover-danger-color);
+}
+
+/* Asegurando que los botones sean accesibles */
+button:focus {
+  outline: 3px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* Agregar responsividad */
+@media (max-width: 768px) {
+  main {
+    padding: 15px;
+  }
+
+  nav {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  li {
+    padding: 12px;
+  }
+
+  button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
 }

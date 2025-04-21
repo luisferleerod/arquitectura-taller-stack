@@ -32,40 +32,52 @@ export default function LecturasPage() {
   }, []);
 
   return (
-    <main>
-      <h1>Lecturas de Sensores</h1>
-      <button>
-        <Link href="/">⬅ Volver a Sensores</Link>
-      </button>
-      {loading && <p>Cargando lecturas...</p>}
-      {error && <p>Error: {error}</p>}
+    <main className="bg-gray-100 min-h-screen py-8 px-4">
+      <h1 className="text-4xl font-bold text-center text-blue-600 mb-8">Lecturas de Sensores</h1>
+
+      <div className="mb-6 text-center">
+        <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+          <Link href="/">⬅ Volver a Sensores</Link>
+        </button>
+      </div>
+
+      {loading && (
+        <p className="text-center text-gray-600 font-semibold">Cargando lecturas...</p>
+      )}
+
+      {error && (
+        <p className="text-center text-red-600 font-semibold">Error: {error}</p>
+      )}
+
       {!loading && !error && (
-        <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f2f2f2' }}>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Dispositivo ID</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Valor</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lecturas.length > 0 ? (
-              lecturas.map((lectura, index) => (
-                <tr key={index}>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{lectura.dispositivo_id}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{lectura.valor}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{lectura.timestamp}</td>
-                </tr>
-              ))
-            ) : (
+        <div className="overflow-x-auto mt-8">
+          <table className="min-w-full table-auto bg-white shadow-lg rounded-lg">
+            <thead className="bg-gray-200">
               <tr>
-                <td colSpan="3" style={{ textAlign: 'center', padding: '8px' }}>
-                  No hay lecturas disponibles
-                </td>
+                <th className="px-6 py-3 text-left text-gray-700 font-semibold">Dispositivo ID</th>
+                <th className="px-6 py-3 text-left text-gray-700 font-semibold">Valor</th>
+                <th className="px-6 py-3 text-left text-gray-700 font-semibold">Timestamp</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {lecturas.length > 0 ? (
+                lecturas.map((lectura, index) => (
+                  <tr key={index} className="border-t hover:bg-gray-50">
+                    <td className="px-6 py-3 text-center">{lectura.dispositivo_id}</td>
+                    <td className="px-6 py-3 text-center">{lectura.valor}</td>
+                    <td className="px-6 py-3 text-center">{lectura.timestamp}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="text-center text-gray-500 py-6">
+                    No hay lecturas disponibles
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </main>
   );
