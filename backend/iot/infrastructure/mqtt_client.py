@@ -25,7 +25,7 @@ MQTT_TOPICS = [
 
 def get_dispositivo_id(sensor_type):
     session = get_session()
-    query = "SELECT id FROM iot_dispositivo WHERE tipo = %s LIMIT 1"
+    query = "SELECT id FROM iot_dispositivo WHERE tipo = %s LIMIT 1 ALLOW FILTERING"
     row = session.execute(query, [sensor_type]).one()
     return row.id if row else None
 
