@@ -92,13 +92,24 @@ export default function DispositivosPage() {
   };
 
   return (
-    <main>
-      <h1>Lista de Sensores</h1>
-      <button onClick={() => setFormVisible(true)}>+ Agregar Sensor</button>
-      <button style={{ marginLeft: "10px" }}>
-        <Link href="/lecturas">📈 Ver Lecturas</Link>
-      </button>
+    <main className="bg-gray-100 min-h-screen py-8 px-4">
+      <h1 className="text-4xl font-bold text-center mb-8 text-blue-600">Lista de Sensores</h1>
 
+      <div className="flex justify-center mb-6">
+        <button 
+          onClick={() => setFormVisible(true)} 
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300 mr-4"
+        >
+          + Agregar Sensor
+        </button>
+        <button 
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+        >
+          <Link href="/lecturas">📈 Ver Lecturas</Link>
+        </button>
+      </div>
+
+      {/* Formulario de agregar sensor */}
       {formVisible && (
         <FormularioSensor
           nuevoSensor={nuevoSensor}
@@ -108,12 +119,14 @@ export default function DispositivosPage() {
         />
       )}
 
+      {/* Lista de sensores */}
       <ListaSensores
         sensores={sensores}
         onEditar={setSensorEditar}
         onEliminar={eliminarSensor}
       />
 
+      {/* Formulario de editar sensor */}
       {sensorEditar && (
         <EditarSensor
           sensor={sensorEditar}
