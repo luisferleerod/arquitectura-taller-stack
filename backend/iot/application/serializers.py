@@ -1,7 +1,7 @@
 # iot/serializers.py
 
 from rest_framework import serializers
-from .models import Dispositivo, Lectura
+from .domain.models  import Dispositivo, Lectura
 
 class DispositivoSerializer(serializers.ModelSerializer):
     class Meta:

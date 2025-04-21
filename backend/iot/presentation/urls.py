@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import lista_dispositivos, eliminar_dispositivo, actualizar_dispositivo, agregar_dispositivo, lista_lecturas
+from iot.presentation.views import lista_dispositivos, eliminar_dispositivo, actualizar_dispositivo, agregar_dispositivo, lista_lecturas
 
 urlpatterns = [
     path('lista-dispositivos/', lista_dispositivos),

@@ -19,6 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('iot.urls')),  # Incluye tus endpoints
+    path('', include('iot.presentation.urls')), 
 ]
 
