@@ -1,0 +1,107 @@
+
+
+services:
+  cassandra:
+    build:
+      context: ./cassandra
+    container_name: cassandra_db
+    environment:
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+      - CASSANDRA_DC=DC1
+      - CASSANDRA_RACK=Rack1
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+      - ./cassandra/init-db.cql:/docker-entrypoint-initdb.d/init-db.cql
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    entrypoint: ["/bin/bash", "-c", "docker-entrypoint.sh cassandra -f && cqlsh -f /docker-entrypoint-initdb.d/init-db.cql"]
+  mqtt:
+    image: eclipse-mosquitto:2.0
+    container_name: mqtt_broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mqtt/config:/mosquitto/config
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
+
+  backend:
+    build:
+      context: ./backend
+    container_name: django_backend
+    command: ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - cassandra
+      - mqtt
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+      - CASSANDRA_HOST=cassandra
+      - CASSANDRA_PORT=9042
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nextjs_frontend
+    
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://backend:8000
+
+  temperatura:
+    build:
+      context: ./sensors/temperatura
+      dockerfile: Dockerfile
+    container_name: sensor_temperature
+    depends_on:
+      - mqtt
+    environment:
+      - SENSOR_TYPE=temperature
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+
+  humedad:
+    build:
+      context: ./sensors/humedad
+      dockerfile: Dockerfile
+    container_name: sensor_humidity
+    depends_on:
+      - mqtt
+    environment:
+      - SENSOR_TYPE=humidity
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+
+  oxigeno:
+    build:
+      context: ./sensors/oxigeno
+      dockerfile: Dockerfile
+    container_name: sensor_oxygen
+    depends_on:
+      - mqtt
+    environment:
+      - SENSOR_TYPE=oxygen
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+
+volumes:
+  cassandra_data:
+  frontend_node_modules:
+networks:
+  default:
+    driver: bridge
