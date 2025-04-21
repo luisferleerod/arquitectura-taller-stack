@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS iot_lectura (
 
 -- Indexar para búsquedas por timestamp
 CREATE INDEX IF NOT EXISTS ON iot_lectura (timestamp);
+CREATE INDEX iot_dispositivo_tipo_idx ON sensores_app.iot_dispositivo (tipo);
 
 -- Insertar algunos dispositivos de ejemplo
 INSERT INTO iot_dispositivo (id, nombre, tipo, estado) 

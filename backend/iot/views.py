@@ -92,3 +92,19 @@ def actualizar_dispositivo(request, id):
         return JsonResponse({'mensaje': 'Dispositivo actualizado correctamente'})
     
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+from django.http import JsonResponse
+from .cassandra_connector import get_session
+from datetime import datetime
+
+def lista_lecturas(request):
+    session = get_session()
+    rows = session.execute("SELECT dispositivo_id, valor, timestamp FROM iot_lectura")
+    lecturas = [
+        {
+            "dispositivo_id": str(row.dispositivo_id),
+            "valor": float(row.valor),
+            "timestamp": row.timestamp.isoformat()  # Convertir a string para JSON
+        } for row in rows
+    ]
+    return JsonResponse(lecturas, safe=False)
