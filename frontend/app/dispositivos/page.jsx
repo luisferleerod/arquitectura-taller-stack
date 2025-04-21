@@ -1,4 +1,127 @@
+'use client';
+
+import { useState, useEffect } from "react";
+import ListaSensores from "./components/ListaSensores";
+import FormularioSensor from "./components/FormularioSensor";
+import EditarSensor from "./components/EditarSensor";
+import Link from "next/link";
+
 export default function DispositivosPage() {
-    return <h1>Página de Dispositivos</h1>;
-  }
-  
+  const [sensores, setSensores] = useState([]);
+  const [formVisible, setFormVisible] = useState(false);
+  const [nuevoSensor, setNuevoSensor] = useState({ nombre: "", tipo: "", estado: "activo" });
+  const [sensorEditar, setSensorEditar] = useState(null);
+
+  const obtenerSensores = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/lista-dispositivos/");
+      if (!response.ok) throw new Error("Error al obtener los sensores");
+      const data = await response.json();
+      setSensores(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    obtenerSensores();
+  }, []);
+
+  const agregarSensor = async () => {
+    if (!nuevoSensor.nombre || !nuevoSensor.tipo) {
+      alert("Por favor completa nombre y tipo");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/agregar-dispositivo/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevoSensor),
+      });
+
+      if (!res.ok) throw new Error("Error al agregar sensor");
+
+      const data = await res.json();
+      setSensores([...sensores, { ...nuevoSensor, id: data.id }]);
+      setNuevoSensor({ nombre: "", tipo: "", estado: "activo" });
+      setFormVisible(false);
+    } catch (error) {
+      console.error(error);
+      alert("Error al agregar el sensor");
+    }
+  };
+
+  const eliminarSensor = async (id) => {
+    const confirm = window.confirm("¿Seguro que deseas eliminar este sensor?");
+    if (!confirm) return;
+
+    try {
+      const res = await fetch(`http://localhost:8000/eliminar-dispositivo/${id}/`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Error al eliminar el sensor");
+
+      setSensores(sensores.filter((s) => s.id !== id));
+    } catch (error) {
+      console.error("Error eliminando:", error);
+      alert("Hubo un error al eliminar el sensor");
+    }
+  };
+
+  const actualizarSensor = async (e) => {
+    e.preventDefault();
+    const { id, nombre, tipo, estado } = sensorEditar;
+
+    try {
+      const res = await fetch(`http://localhost:8000/actualizar-dispositivo/${id}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, tipo, estado })
+      });
+
+      if (!res.ok) throw new Error('Error actualizando sensor');
+
+      setSensores(sensores.map(s => (s.id === id ? sensorEditar : s)));
+      setSensorEditar(null);
+    } catch (err) {
+      console.error(err);
+      alert('Error al actualizar');
+    }
+  };
+
+  return (
+    <main>
+      <h1>Lista de Sensores</h1>
+      <button onClick={() => setFormVisible(true)}>+ Agregar Sensor</button>
+      <button style={{ marginLeft: "10px" }}>
+        <Link href="/lecturas">📈 Ver Lecturas</Link>
+      </button>
+
+      {formVisible && (
+        <FormularioSensor
+          nuevoSensor={nuevoSensor}
+          setNuevoSensor={setNuevoSensor}
+          onGuardar={agregarSensor}
+          onCancelar={() => setFormVisible(false)}
+        />
+      )}
+
+      <ListaSensores
+        sensores={sensores}
+        onEditar={setSensorEditar}
+        onEliminar={eliminarSensor}
+      />
+
+      {sensorEditar && (
+        <EditarSensor
+          sensor={sensorEditar}
+          setSensor={setSensorEditar}
+          onSubmit={actualizarSensor}
+          onCancel={() => setSensorEditar(null)}
+        />
+      )}
+    </main>
+  );
+}
