@@ -3,6 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Dispositivo, Lectura
 import json
+from django.views.decorators.http import require_http_methods
+from uuid import uuid4
 
 def lista_dispositivos(request):
     dispositivos = Dispositivo.objects.all().values('id', 'nombre', 'tipo', 'estado')
@@ -13,8 +15,7 @@ def lista_lecturas(request):
     return JsonResponse(list(lecturas), safe=False)
 
 from django.http import JsonResponse
-from .cassandra_connector import get_session  # ✅ Import correcto
-
+from .cassandra_connector import get_session 
 def lista_dispositivos(request):
     session = get_session()
     rows = session.execute("SELECT id, nombre, tipo, estado FROM iot_dispositivo")
@@ -40,6 +41,34 @@ def eliminar_dispositivo(request, dispositivo_id):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def agregar_dispositivo(request):
+    try:
+        print("BODY:", request.body)  
+        data = json.loads(request.body)
+        print("JSON DATA:", data) 
+
+        nuevo_id = uuid4()
+        nombre = data.get('nombre')
+        tipo = data.get('tipo')
+        estado = data.get('estado')
+
+        session = get_session()
+        query = f"""
+            INSERT INTO iot_dispositivo (id, nombre, tipo, estado)
+            VALUES ({nuevo_id}, '{nombre}', '{tipo}', '{estado}')
+        """
+        print("QUERY:", query)  
+        session.execute(query)
+
+        return JsonResponse({'mensaje': 'Dispositivo agregado correctamente', 'id': str(nuevo_id)}, status=201)
+
+    except Exception as e:
+        print("ERROR:", str(e))  
+        return JsonResponse({'error': str(e)}, status=500)
+
     
 @csrf_exempt
 def actualizar_dispositivo(request, id):
